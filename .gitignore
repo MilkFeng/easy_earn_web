@@ -1,0 +1,8 @@
+# node.js 生成的文件
+node_modules/
+
+# 日志文件
+logs/
+
+# .gitingore 必须要有
+!.gitingore
