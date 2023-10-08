@@ -1,6 +1,7 @@
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import Mainwindow from "../views/Mainwindow.vue";
 
 const routes = [
   {
@@ -14,6 +15,10 @@ const routes = [
   {
     path: "/register",
     component: Register,
+  },
+  {
+    path: "/mainwindow",
+    component: Mainwindow,
   },
 ];
 

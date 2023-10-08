@@ -50,7 +50,9 @@
 
       <v-card-text class="text-center">
         没有账号？
-        <router-link to="/register" class="text-blue text-decoration-none">
+        <!-- <router-link to="/register" class="text-blue text-decoration-none"> -->
+          <!-- 暂时在这个地方链接到主页 -->
+        <router-link to="/mainwindow" class="text-blue text-decoration-none">  
           现在注册 <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
