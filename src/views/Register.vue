@@ -1,117 +1,145 @@
 <template>
   <div>
-    <v-img
-      class="mx-auto my-6"
-      max-width="228"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
-    ></v-img>
-
     <v-card
       class="mx-auto pa-12 pb-8"
       elevation="8"
-      max-width="448"
+      width="448"
       rounded="lg"
     >
-      <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+      <v-form ref="register_form">
+        <div class="text-subtitle-1 text-medium-emphasis">用户名</div>
 
-      <v-text-field
-        density="compact"
-        placeholder="Email address"
-        prepend-inner-icon="mdi-email-outline"
-        variant="outlined"
-      ></v-text-field>
+        <v-text-field
+          :type="'username'"
+          :rules="[rules.required, rules.counter, rules.username]"
+          density="compact"
+          placeholder="输入用户名"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+          v-model="username"
+        ></v-text-field>
 
-      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">密码</div>
 
-        <!-- <a
-          class="text-caption text-decoration-none text-blue"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
+        <v-text-field
+          :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="visible ? 'text' : 'password'"
+          :rules="[rules.required, rules.counter, rules.password]"
+          density="compact"
+          placeholder="输入密码"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="visible = !visible"
+          v-model="password"
+        ></v-text-field>
+
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">确认密码</div>
+
+        <v-text-field
+          :append-inner-icon="visible2 ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="visible2 ? 'text' : 'password'"
+          :rules="[rules.required, rules.confirm_password]"
+          density="compact"
+          placeholder="再次输入密码"
+          prepend-inner-icon="mdi-lock-check-outline"
+          variant="outlined"
+          @click:append-inner="visible2 = !visible2"
+          v-model="confirm_password"
+        ></v-text-field>
+
+        <v-btn
+          :loading="loading"
+          :disabled="loading"
+          block
+          class="mb-3 mt-5"
+          color="blue"
+          size="large"
+          variant="tonal"
+          @click="register"
         >
-          Forgot login password?</a> -->
-      </div>
-
-      <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'"
-        density="compact"
-        placeholder="Enter your password"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="visible = !visible"
-      ></v-text-field>
-
-      <v-text-field
-        :append-inner-icon="visible2 ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="visible ? 'text' : 'password'"
-        density="compact"
-        placeholder="Confirm your password"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="visible2 = !visible2"
-      ></v-text-field>
-
-      <v-card
-        class="mb-12"
-        color="surface-variant"
-        variant="tonal"
-      >
-        <v-card-text class="text-medium-emphasis text-caption">
-          Hint: Your password must be at least 8 digits and contain three of upper/lowercase letters, numbers, and special characters.
-        </v-card-text>
-      </v-card>
-
-      <v-btn
-        block
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="tonal"
-      >
-        REGISTER
-      </v-btn>
+          注册
+        </v-btn>
+      </v-form>
+      
 
       <v-card-text class="text-center">
-        <a
+        已有账号？
+        <router-link
           class="text-blue text-decoration-none"
-          href="/login"
-          rel="noopener noreferrer"
-          target="_blank"
+          to="/login"
         >
-          Log in now <v-icon icon="mdi-chevron-right"></v-icon>
-        </a>
+          现在登录 <v-icon icon="mdi-chevron-right"></v-icon>
+        </router-link>
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
+import { getCurrentInstance, onMounted, ref } from "vue";
+
 export default {
-  data() {
-    return {
-      newUsername: "",
-      newPassword: "",
-      confirmPassword: "",
-      visible:false,
-      visible2:false,
+  setup() {
+
+    // 使用 ref 来声明响应式变量
+    const axios = ref(null);
+    const base_url = ref("");
+
+    const username = ref("");
+    const password = ref("");
+    const confirm_password = ref("");
+    const loading = ref(false);
+    const visible = ref(false);
+    const visible2 = ref(false);
+    const rules = {
+      required: value => !!value || '不能为空',
+      counter: value => (value.length <= 30 && value.length > 3) || '太长或太短',
+      username: value => /^[a-zA-Z0-9_]+$/.test(value) || '用户名只能包含数字、字母和下划线',
+      password: value => /^[A-Za-z0-9!@#$%^&*()]+$/.test(value) || '密码只能包含数字、字母和!@#$%^&*()',
+      confirm_password: value => value === password.value || '两次密码不一致'
     };
-  },
-  methods: {
-    register() {
-      if (this.newPassword === this.confirmPassword) {
-        // 在这里执行注册逻辑
-        console.log("Register clicked");
-      } else {
-        alert("Passwords do not match. Please try again.");
-      }
-    },
-    redirectToLogin() {
-      // 在这里进行路由跳转到登录页面的逻辑
-      this.$router.push("/login");
-    },
-  },
+
+    const register_form = ref(null);
+
+    onMounted(() => {
+      const { proxy } = getCurrentInstance();
+
+      axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+    });
+
+    function register() {
+      register_form.value.validate().then(valid => {
+        if(valid.valid) {
+          loading.value = true;
+
+          axios.value.post("/api/user/register", {
+            username: username.value,
+            password: password.value,
+          }).then(response => {
+            console.log('成功响应:', response.data);
+            loading.value = false;
+          }).catch(error => {
+            console.log('发生错误:', error);
+            loading.value = false;
+          });
+        }
+      });
+    }
+
+    return {
+      username,
+      password,
+      confirm_password,
+      loading,
+      visible,
+      visible2,
+      rules,
+
+      register,
+
+      register_form,
+    }
+  }
 };
 </script>
 

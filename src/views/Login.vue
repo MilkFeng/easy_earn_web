@@ -1,100 +1,130 @@
 <template>
   <div>
-    <v-img
-      class="mx-auto my-6"
-      max-width="228"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
-    ></v-img>
-
     <v-card
       class="mx-auto pa-12 pb-8"
       elevation="8"
-      max-width="448"
+      width="448"
       rounded="lg"
     >
-      <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+      <v-form ref="login_form">
+        <div class="text-subtitle-1 text-medium-emphasis">用户名</div>
 
-      <v-text-field
-        density="compact"
-        placeholder="Email address"
-        prepend-inner-icon="mdi-email-outline"
-        variant="outlined"
-      ></v-text-field>
+        <v-text-field
+          :type="'username'"
+          :rules="[rules.required, rules.counter, rules.username]"
+          density="compact"
+          placeholder="输入用户名"
+          prepend-inner-icon="mdi-account-outline"
+          variant="outlined"
+          v-model="username"
+        ></v-text-field>
 
-      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
+        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">密码</div>
 
-        <!-- <a
-          class="text-caption text-decoration-none text-blue"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
+        <v-text-field
+          :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="visible ? 'text' : 'password'"
+          :rules="[rules.required, rules.counter, rules.password]"
+          density="compact"
+          placeholder="输入密码"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          v-model="password"
+          @click:append-inner="visible = !visible"
+        ></v-text-field>
+
+        <v-btn
+          :loading="loading"
+          :disabled="loading"
+          block
+          class="mb-3 mt-5"
+          color="blue"
+          size="large"
+          variant="tonal"
+          @click="login()"
+          
         >
-          Forgot login password?</a> -->
-      </div>
-
-      <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="visible ? 'text' : 'password'"
-        density="compact"
-        placeholder="Enter your password"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="visible = !visible"
-      ></v-text-field>
-
-      <v-card
-        class="mb-12"
-        color="surface-variant"
-        variant="tonal"
-      >
-        <v-card-text class="text-medium-emphasis text-caption">
-          Warning: After 3 consecutive failed login attempts, you account will be temporarily locked for three hours.
-        </v-card-text>
-      </v-card>
-
-      <v-btn
-        block
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="tonal"
-      >
-        Log In
-      </v-btn>
+          登录
+        </v-btn>
+      </v-form>
 
       <v-card-text class="text-center">
-        <a
-          class="text-blue text-decoration-none"
-          href="/register"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
-        </a>
+        没有账号？
+        <router-link to="/register" class="text-blue text-decoration-none">
+          现在注册 <v-icon icon="mdi-chevron-right"></v-icon>
+        </router-link>
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
+import { getCurrentInstance, onMounted, ref } from "vue";
+import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
+
 export default {
-  data() {
-    return {
-      username: "",
-      password: "",
-      visible: false,
+  setup() {
+    const axios = ref(null);
+
+    const username = ref("");
+    const password = ref("");
+    const visible = ref(false);
+    const loading = ref(false);
+    const rules = {
+      required: value => !!value || '不能为空',
+      counter: value => (value.length <= 30 && value.length > 3) || '太长或太短',
+      username: value => /^[a-zA-Z0-9_]+$/.test(value) || '用户名只能包含数字、字母和下划线',
+      password: value => /^[A-Za-z0-9!@#$%^&*()]+$/.test(value) || '密码只能包含数字、字母和!@#$%^&*()',
     };
-  },
-  methods: {
-    login() {
-      // 在这里执行登录逻辑
-      console.log("Login clicked");
-    },
-    redirectToRegister() {
-      // 在这里进行路由跳转到注册页面的逻辑
-      this.$router.push("/register");
-    },
+
+    const login_form = ref(null);
+
+    const router = vueRouter.useRouter(); // 获取 Vue Router 实例
+
+    onMounted(() => {
+      axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+    });
+
+    function login() {
+      login_form.value.validate().then(valid => {
+        if(valid.valid) {
+          loading.value = true;
+
+          axios.value.post("/api/user/login", {
+            username: username.value,
+            password: password.value,
+          }).then(response => {
+            console.log('成功响应:', response.data);
+            loading.value = false;
+            
+            // 存储 token
+            localStorage.setItem("token", response.data.token);
+
+            // 跳转到首页
+            router.push({ path: '/' });
+
+
+          }).catch(error => {
+            console.log('发生错误:', error);
+            loading.value = false;
+          });
+
+          console.log("登录");
+        }
+      })
+    };
+
+    return {
+      username,
+      password,
+      visible,
+      loading,
+      rules,
+
+      login_form,
+
+      login,
+    };
   },
 };
 </script>
