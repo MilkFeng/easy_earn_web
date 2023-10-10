@@ -31,7 +31,7 @@
 
         <v-container>
 
-          <v-card style="font-family: 'Courier New', Courier, monospace;" variant="outlined" class="my-4">
+          <v-card variant="outlined" class="my-4 text-mono">
             <v-card-title class="mb-3">
               <v-row class="mt-1 ms-0 me-1">
                 <v-text-area>私钥</v-text-area>
@@ -45,7 +45,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card style="font-family: 'Courier New', Courier, monospace;" variant="outlined" class="my-4">
+          <v-card variant="outlined" class="my-4 text-mono">
             <v-card-title class="mb-3">
               <v-row class="mt-1 ms-0 me-1">
                 <v-text-area>公钥</v-text-area>
@@ -75,7 +75,7 @@
             <!-- <v-icon size="100" color="red">mdi-close-circle</v-icon>
             <h3 class="text-h6 my-2">出现错误</h3> -->
 
-            <v-card style="font-family: 'Courier New', Courier, monospace;" variant="outlined" class="my-4 text-left">
+            <v-card variant="outlined" class="my-4 text-left text-mono">
               <v-card-title class="mb-3">
                 <v-row class="mt-1 ms-0 me-1">
                   <v-text-area>私钥</v-text-area>
@@ -89,7 +89,7 @@
               </v-card-text>
             </v-card>
 
-            <v-card style="font-family: 'Courier New', Courier, monospace;" variant="outlined" class="my-4 text-left">
+            <v-card variant="outlined" class="my-4 text-left text-mono">
               <v-card-title class="mb-3">
                 <v-row class="mt-1 ms-0 me-1">
                   <v-text-area>公钥</v-text-area>
@@ -103,7 +103,7 @@
               </v-card-text>
             </v-card>
 
-            <v-card style="font-family: 'Courier New', Courier, monospace;" variant="outlined" class="my-4 text-left">
+            <v-card variant="outlined" class="my-4 text-left text-mono">
               <v-card-title class="mb-3">
                 <v-row class="mt-1 ms-0 me-1">
                   <v-text-area>钱包地址</v-text-area>

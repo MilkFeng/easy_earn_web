@@ -24,7 +24,7 @@
       <!-- 页面2 -->
       <template v-slot:item.2>
         <v-text-area class="text-h6">输入钱包地址</v-text-area>
-        <v-text-field v-model="walletAddress" variant="outlined" class="mt-4" style="font-family: 'Courier New', Courier, monospace;"></v-text-field>
+        <v-text-field v-model="walletAddress" variant="outlined" class="mt-4 text-mono"></v-text-field>
       </template>
 
       <!-- 页面3 -->
@@ -35,7 +35,7 @@
             <v-icon size="100" color="green">mdi-check-circle</v-icon>
             <h3 class="text-h6 my-2">完成绑定</h3>
 
-            <v-card style="font-family: 'Courier New', Courier, monospace;" variant="outlined" class="my-4 text-left">
+            <v-card variant="outlined" class="my-4 text-left text-mono">
               <v-card-title class="mb-3">
                 <v-row class="mt-1 ms-0 me-1">
                   <v-text-area>钱包地址</v-text-area>

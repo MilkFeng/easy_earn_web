@@ -50,7 +50,7 @@
               </v-card-title>
               <v-card-text>
                 <!-- 钱包信息内容 -->
-                <p style="font-family: 'Courier New', Courier, monospace;">
+                <p class="text-mono">
                   <span v-if="showFullAddress[wallet.id]">{{ formateAddress(wallet.address) }}</span>
                   <span v-else>{{ '******** '.repeat(6) + wallet.address.slice(-6) }}</span>
                 </p>
