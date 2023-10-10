@@ -10,9 +10,15 @@ import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.min.css';
 import axios from 'axios';
 
+import { md3 } from 'vuetify/blueprints';
+
 const vuetify = createVuetify({
   components,
   directives,
+  blueprint: md3,
+  // theme: {
+  //   defaultTheme: 'dark'
+  // },
 });
 
 const app = createApp(App);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container class="center-content">
     <v-card
       class="mx-auto pa-12 pb-8"
       elevation="8"
@@ -57,7 +57,7 @@
         </router-link>
       </v-card-text>
     </v-card>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -144,5 +144,12 @@ export default {
 .custom-card-content {
   height: 100%;
   width: 100%; /* 设置卡片的宽度为100%以填充容器 */
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 使内容占据整个视窗高度 */
 }
 </style>
