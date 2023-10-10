@@ -24,7 +24,7 @@
               </v-btn>
             </v-col>
             <v-col cols="6">
-              <v-btn class="py-3 mb-8 text-center" variant="outlined" block size="large" @click="routeTo('/mainwindow')">
+              <v-btn class="py-3 mb-8 text-center" variant="outlined" block size="large" @click="routeTo('/dashboard2')">
                 绑定钱包
               </v-btn>
             </v-col>

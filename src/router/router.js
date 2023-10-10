@@ -3,6 +3,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Mainwindow from "../views/Mainwindow.vue";
 import DashBoard from "../views/DashBoard.vue";
+import DashBoard2 from "../views/DashBoard2.vue";
 import Wallet from "../views/Wallet.vue";
 
 
@@ -30,6 +31,10 @@ const routes = [
   {
     path: "/dashboard",
     component: DashBoard,
+  },
+  {
+    path: "/dashboard2",
+    component: DashBoard2,
   },
 
 ];
