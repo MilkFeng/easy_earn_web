@@ -2,8 +2,8 @@ import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Mainwindow from "../views/Mainwindow.vue";
-import DashBoard from "../views/DashBoard.vue";
-import DashBoard2 from "../views/DashBoard2.vue";
+import CreateWallet from "../views/CreateWallet.vue";
+import BondWallet from "../views/BondWallet.vue";
 import Wallet from "../views/Wallet.vue";
 
 
@@ -29,12 +29,12 @@ const routes = [
     component: Wallet,
   },
   {
-    path: "/dashboard",
-    component: DashBoard,
+    path: "/create-wallet",
+    component: CreateWallet,
   },
   {
-    path: "/dashboard2",
-    component: DashBoard2,
+    path: "/bond-wallet",
+    component: BondWallet,
   },
 
 ];
