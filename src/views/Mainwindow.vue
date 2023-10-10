@@ -32,8 +32,8 @@
               <h3 class="my-1">{{ user.username }}</h3>
               <h2 class="my-2">$ 300</h2>
               <v-divider class="my-3"></v-divider>
-              <v-btn rounded variant="text">我的账户</v-btn>
-              <v-btn rounded variant="text">登出</v-btn>
+                <v-btn rounded variant="text" @click="routeTo('/wallet')">钱包</v-btn>
+                <v-btn rounded variant="text">登出</v-btn>
             </div>
           </v-card-text>
         </v-card>
@@ -100,6 +100,9 @@ export default {
       // 点击头像后，链接到个人信息页面
       this.$router.push("/profile"); // 使用 Vue Router 的编程式导航
     },
+    routeTo(url) {
+      this.$router.push(url);
+    }
   },
 };
 </script>

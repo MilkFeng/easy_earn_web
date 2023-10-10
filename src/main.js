@@ -10,6 +10,8 @@ import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.min.css';
 import axios from 'axios';
 
+import { VStepper } from 'vuetify/labs/VStepper';
+
 import { md3 } from 'vuetify/blueprints';
 
 const vuetify = createVuetify({
@@ -22,6 +24,8 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App);
+
+app.component('VStepper', VStepper);
 
 app.config.globalProperties.$axios = axios;
 
