@@ -1,6 +1,6 @@
 <template>
   <v-container class="center-content">
-    <v-card class="mx-auto pa-12 pb-8" elevation="8" width="448" rounded="lg">
+    <v-card class="mx-auto pa-12 pb-8" width="448" variant="outlined">
       <v-form ref="register_form">
         <div class="text-subtitle-1 text-medium-emphasis">用户名</div>
 
@@ -76,7 +76,7 @@ export default {
         if (valid.valid) {
           loading.value = true;
 
-          axios.value.post("/api/user/register", {
+          axios.value.post("/user/register", {
             username: username.value,
             password: password.value,
           }).then(response => {

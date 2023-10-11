@@ -44,4 +44,8 @@ const router = vueRouter.createRouter({
   routes,
 });
 
-export default router;
+export default (app) => {
+  app.router = router;
+
+  app.use(router);
+}

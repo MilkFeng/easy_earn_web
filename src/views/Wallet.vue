@@ -30,7 +30,7 @@
           </v-col>
           <v-col cols="4">
             <v-btn class="mb-4 text-center" variant="tonal" block size="large">
-              刷新钱包余额
+              刷新钱包
             </v-btn>
           </v-col>
         </v-row>
@@ -42,17 +42,10 @@
                 <v-row justify="center" align="center">
                   <v-card-title class="text-h4 my-4">{{ wallet.balance }}</v-card-title>
                   <v-spacer></v-spacer>
-                  <v-btn icon="mdi-content-copy" class="center-content me-2" variant="text" density="comfortable"
+                  <v-btn v-if="showFullAddress[wallet.id]" icon="mdi-content-copy" class="center-content me-2" variant="text" density="comfortable"
                     size="small"></v-btn>
-                  <v-btn class="center-content me-2" variant="text" density="compact"
-                    @click="toggleShowAddress(wallet.id)" :rounded="true">
-                    <v-icon v-if="showFullAddress[wallet.id]">mdi-eye</v-icon>
-                    <v-icon v-else>mdi-eye-off</v-icon>
-                  </v-btn>
-
-
-
-
+                  <v-btn :icon="showFullAddress[wallet.id] ? 'mdi-eye' : 'mdi-eye-off'" class="center-content me-2"
+                    variant="text" density="compact" @click="toggleShowAddress(wallet.id)"></v-btn>
                   <v-btn icon="mdi-close" class="center-content me-2" variant="text" density="compact"></v-btn>
                 </v-row>
               </v-card-title>
@@ -63,14 +56,6 @@
                   <span v-else>{{ '******** '.repeat(6) + wallet.address.slice(-6) }}</span>
                 </p>
               </v-card-text>
-              <!-- 添加删除钱包的按钮 -->
-              <!-- <v-card-actions>
-                <v-row justify="end">
-                  <v-btn class="me-1" variant="outlined" @click="toggleShowAddress(wallet.id)">{{
-                    showFullAddress[wallet.id] ? '隐藏' : '显示' }}</v-btn>
-                  <v-btn class="me-4" variant="outlined">删除</v-btn>
-                </v-row>
-              </v-card-actions> -->
             </v-card>
           </v-col>
         </v-row>
