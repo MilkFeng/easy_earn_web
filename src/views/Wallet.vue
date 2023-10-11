@@ -44,7 +44,15 @@
                   <v-spacer></v-spacer>
                   <v-btn icon="mdi-content-copy" class="center-content me-2" variant="text" density="comfortable"
                     size="small"></v-btn>
-                  <v-btn icon="mdi-eye" class="center-content me-2" variant="text" density="compact"></v-btn>
+                  <v-btn class="center-content me-2" variant="text" density="compact"
+                    @click="toggleShowAddress(wallet.id)" :rounded="true">
+                    <v-icon v-if="showFullAddress[wallet.id]">mdi-eye</v-icon>
+                    <v-icon v-else>mdi-eye-off</v-icon>
+                  </v-btn>
+
+
+
+
                   <v-btn icon="mdi-close" class="center-content me-2" variant="text" density="compact"></v-btn>
                 </v-row>
               </v-card-title>
