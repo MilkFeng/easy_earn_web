@@ -1,17 +1,17 @@
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
-import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
-import Mainwindow from "../views/Mainwindow.vue";
-import CreateWallet from "../views/CreateWallet.vue";
-import BondWallet from "../views/BondWallet.vue";
-import Wallet from "../views/Wallet.vue";
-import Trade from "../views/Trade.vue";
+import Login from "../views/auth/Login.vue";
+import Register from "../views/auth/Register.vue";
+
+import Main from "../views/main/Main.vue";
+import Wallet from "../views/main/Wallet.vue";
+import Market from "../views/main/Market.vue";
+
+
+import CreateWallet from "../views/wallet/CreateWallet.vue";
+import BondWallet from "../views/wallet/BondWallet.vue";
+import Trade from "../views/wallet/Trade.vue";
 
 const routes = [
-  {
-    path: "/",
-    redirect: "/login",
-  },
   {
     path: "/login",
     component: Login,
@@ -21,12 +21,18 @@ const routes = [
     component: Register,
   },
   {
-    path: "/mainwindow",
-    component: Mainwindow,
-  },
-  {
-    path: "/wallet",
-    component: Wallet,
+    path: "/",
+    component: Main,
+    children: [
+      {
+        path: "/wallet",
+        component: Wallet,
+      },
+      {
+        path: "/market",
+        component: Market,
+      }
+    ],
   },
   {
     path: "/create-wallet",
@@ -40,7 +46,6 @@ const routes = [
     path: "/trade",
     component: Trade,
   },
-
 ];
 
 const router = vueRouter.createRouter({

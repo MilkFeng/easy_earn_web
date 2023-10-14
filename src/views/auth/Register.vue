@@ -39,72 +39,54 @@
   </v-container>
 </template>
 
-<script>
+<script setup>
 import { getCurrentInstance, onMounted, ref } from "vue";
 
-export default {
-  setup() {
+// 使用 ref 来声明响应式变量
+const axios = ref(null);
+const base_url = ref("");
 
-    // 使用 ref 来声明响应式变量
-    const axios = ref(null);
-    const base_url = ref("");
+const username = ref("");
+const password = ref("");
+const confirm_password = ref("");
+const loading = ref(false);
+const visible = ref(false);
+const visible2 = ref(false);
+const rules = {
+  required: value => !!value || '不能为空',
+  counter: value => (value.length <= 30 && value.length > 3) || '太长或太短',
+  username: value => /^[a-zA-Z0-9_]+$/.test(value) || '用户名只能包含数字、字母和下划线',
+  password: value => /^[A-Za-z0-9!@#$%^&*()]+$/.test(value) || '密码只能包含数字、字母和!@#$%^&*()',
+  confirm_password: value => value === password.value || '两次密码不一致'
+};
 
-    const username = ref("");
-    const password = ref("");
-    const confirm_password = ref("");
-    const loading = ref(false);
-    const visible = ref(false);
-    const visible2 = ref(false);
-    const rules = {
-      required: value => !!value || '不能为空',
-      counter: value => (value.length <= 30 && value.length > 3) || '太长或太短',
-      username: value => /^[a-zA-Z0-9_]+$/.test(value) || '用户名只能包含数字、字母和下划线',
-      password: value => /^[A-Za-z0-9!@#$%^&*()]+$/.test(value) || '密码只能包含数字、字母和!@#$%^&*()',
-      confirm_password: value => value === password.value || '两次密码不一致'
-    };
+const register_form = ref(null);
 
-    const register_form = ref(null);
+onMounted(() => {
+  const { proxy } = getCurrentInstance();
 
-    onMounted(() => {
-      const { proxy } = getCurrentInstance();
+  axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+});
 
-      axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
-    });
+function register() {
+  register_form.value.validate().then(valid => {
+    if (valid.valid) {
+      loading.value = true;
 
-    function register() {
-      register_form.value.validate().then(valid => {
-        if (valid.valid) {
-          loading.value = true;
-
-          axios.value.post("/user/register", {
-            username: username.value,
-            password: password.value,
-          }).then(response => {
-            console.log('成功响应:', response.data);
-            loading.value = false;
-          }).catch(error => {
-            console.log('发生错误:', error);
-            loading.value = false;
-          });
-        }
+      axios.value.post("/user/register", {
+        username: username.value,
+        password: password.value,
+      }).then(response => {
+        console.log('成功响应:', response.data);
+        loading.value = false;
+      }).catch(error => {
+        console.log('发生错误:', error);
+        loading.value = false;
       });
     }
+  });
+}
 
-    return {
-      username,
-      password,
-      confirm_password,
-      loading,
-      visible,
-      visible2,
-      rules,
-
-      register,
-
-      register_form,
-    }
-  }
-};
 </script>
 
 <style>

@@ -13,7 +13,7 @@ export default defineConfig({
   // 配置前端服务地址和端口
 	server: {
     host: 'localhost',//自定义主机名
-    port: 8080,//自定义端口
+    port: 8082,//自定义端口
     // 是否开启 https
     https: false,
     proxy: {

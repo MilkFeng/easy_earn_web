@@ -65,8 +65,8 @@
 </template>
   
 <script>
-import CardWithMonoText from '../components/CardWithMonoText.vue';
-import CircleWithLoadingAndResult from '../components/CircleWithLoadingAndResult.vue'
+import CardWithMonoText from '../../components/CardWithMonoText.vue';
+import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'
 
 export default {
   components: {

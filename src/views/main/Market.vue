@@ -1,36 +1,5 @@
 <template>
   <v-app>
-    <!-- 应用程序栏，背景颜色设置为灰黑色 -->
-    <v-app-bar app class="ps-8 pe-8">
-      
-      <!-- 按钮组，包括测试字符按钮 -->
-      <v-btn class="rounded-0">测试按钮1</v-btn>
-      <v-btn class="rounded-0">测试按钮2</v-btn>
-      <v-btn class="rounded-0">测试按钮3</v-btn>
-
-      <v-spacer></v-spacer>
-
-      <v-menu min-width="200px" rounded :close-on-content-click="false">
-        <template v-slot:activator="{ props }">
-          <v-btn icon v-bind="props" size="small">
-            <v-avatar image="https://randomuser.me/api/portraits/women/81.jpg"/>
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-text>
-            <div class="mx-auto text-center">
-              <v-avatar image="https://randomuser.me/api/portraits/women/81.jpg"/>
-              <h3 class="my-1">{{ user.username }}</h3>
-              <h2 class="my-2">$ 300</h2>
-              <v-divider class="my-3"></v-divider>
-                <v-btn rounded variant="text" @click="routeTo('/wallet')">钱包</v-btn>
-                <v-btn rounded variant="text">登出</v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-menu>
-
-    </v-app-bar>
 
     <!-- 主要内容区域 -->
     <v-main>
@@ -55,7 +24,7 @@
     </v-main>
   </v-app>
 </template>
-
+  
 <script>
 export default {
   data() {
