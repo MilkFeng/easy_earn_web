@@ -5,7 +5,7 @@ import Mainwindow from "../views/Mainwindow.vue";
 import CreateWallet from "../views/CreateWallet.vue";
 import BondWallet from "../views/BondWallet.vue";
 import Wallet from "../views/Wallet.vue";
-
+import Trade from "../views/Trade.vue";
 
 const routes = [
   {
@@ -35,6 +35,10 @@ const routes = [
   {
     path: "/bond-wallet",
     component: BondWallet,
+  },
+  {
+    path: "/trade",
+    component: Trade,
   },
 
 ];

@@ -29,6 +29,11 @@
             </v-btn>
           </v-col>
           <v-col cols="4">
+            <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/trade')">
+              交易
+            </v-btn>
+          </v-col>
+          <v-col cols="4">
             <v-btn class="mb-4 text-center" variant="tonal" block size="large">
               刷新钱包
             </v-btn>
