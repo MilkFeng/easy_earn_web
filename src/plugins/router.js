@@ -23,6 +23,7 @@ const routes = [
   {
     path: "/",
     component: Main,
+    redirect: "/market",
     children: [
       {
         path: "/wallet",
