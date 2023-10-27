@@ -6,6 +6,7 @@
       <!-- 按钮组，包括测试字符按钮 -->
       <v-btn class="rounded-0" @click="routeTo('/market')">主页</v-btn>
       <v-btn class="rounded-0" @click="routeTo('/wallet')">我的钱包</v-btn>
+      <v-btn class="rounded-0" @click="routeTo('/querymission')">我的任务</v-btn>
 
       <v-spacer></v-spacer>
 
