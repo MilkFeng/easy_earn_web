@@ -64,7 +64,6 @@ const register_form = ref(null);
 
 onMounted(() => {
   const { proxy } = getCurrentInstance();
-
   axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
 });
 

@@ -37,7 +37,9 @@
 import { getCurrentInstance, onMounted, ref } from "vue";
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
-const axios = ref(null);
+
+var axios = null;
+var auth = null;
 
 const username = ref("");
 const password = ref("");
@@ -55,7 +57,8 @@ const login_form = ref(null);
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
 
 onMounted(() => {
-  axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+  axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+  auth = getCurrentInstance()?.appContext.config.globalProperties.$auth;
 });
 
 function login() {
@@ -63,27 +66,31 @@ function login() {
     if (valid.valid) {
       loading.value = true;
 
-      axios.value.post("/user/login", {
-        username: username.value,
-        password: password.value,
-      }).then(response => {
-        console.log('成功响应:', response.data);
-        loading.value = false;
+      auth.login({
+        data: {
+          username: username.value,
+          password: password.value,
+        },
+      })
+        .then(response => {
+          console.log('成功响应:', response.data);
+          auth.token(null, response.data.token, false);
+          console.log('mytoken:', auth.token());
 
-        // 存储 token
-        localStorage.setItem("token", response.data.token);
+          // 存储令牌
+          // setToken(response.data.Token);
 
-        // 跳转到首页
-        router.push({ path: '/' });
-
-
-      }).catch(error => {
-        console.log('发生错误:', error);
-        loading.value = false;
-      });
+          // 跳转到首页或其他需要的页面
+          router.push({ path: '/' });
+        })
+        .catch(error => {
+          console.error('发生错误:', error);
+          loading.value = false;
+        });
 
       console.log("登录");
     }
-  })
-};
+  });
+}
+
 </script>
