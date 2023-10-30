@@ -43,7 +43,8 @@
 import { getCurrentInstance, onMounted, ref } from "vue";
 
 // 使用 ref 来声明响应式变量
-const axios = ref(null);
+var auth = null;
+
 const base_url = ref("");
 
 const username = ref("");
@@ -63,8 +64,7 @@ const rules = {
 const register_form = ref(null);
 
 onMounted(() => {
-  const { proxy } = getCurrentInstance();
-  axios.value = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+  auth = getCurrentInstance()?.appContext.config.globalProperties.$auth;
 });
 
 function register() {
@@ -72,47 +72,22 @@ function register() {
     if (valid.valid) {
       loading.value = true;
 
-      axios.value.post("/user/register", {
-        username: username.value,
-        password: password.value,
+      auth.register({
+        data: {
+          username: username.value,
+          password: password.value,
+        }
       }).then(response => {
         console.log('成功响应:', response.data);
         loading.value = false;
       }).catch(error => {
-        console.log('发生错误:', error);
+        console.log('发生错误:', error.response.data);
         loading.value = false;
+
+        alert(error.response.data.msg);
       });
     }
   });
 }
 
 </script>
-
-<style>
-/* 自定义有颜色的框的样式 */
-.custom-card {
-  background-color: #e3f2fd;
-  /* 设置框的背景颜色 */
-  padding: 16px;
-  /* 设置框的内边距 */
-  border-radius: 8px;
-  /* 设置框的圆角 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* 添加框的阴影效果 */
-}
-
-/* 设置卡片内容的高度和大小一致 */
-.custom-card-content {
-  height: 100%;
-  width: 100%;
-  /* 设置卡片的宽度为100%以填充容器 */
-}
-
-.center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  /* 使内容占据整个视窗高度 */
-}
-</style>

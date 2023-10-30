@@ -12,19 +12,32 @@ import CreateWallet from "../views/wallet/CreateWallet.vue";
 import BondWallet from "../views/wallet/BondWallet.vue";
 import Trade from "../views/wallet/Trade.vue";
 
+import Page404 from "../views/errors/404.vue"
+
 const routes = [
   {
     path: "/login",
+    name: 'auth-login',
     component: Login,
+    meta: {
+      auth: false
+    }
   },
   {
     path: "/register",
+    name: 'auth-register',
     component: Register,
+    meta: {
+      auth: false
+    }
   },
   {
     path: "/",
     component: Main,
     redirect: "/market",
+    meta: {
+      auth: true
+    },
     children: [
       {
         path: "/wallet",
@@ -33,10 +46,10 @@ const routes = [
       {
         path: "/market",
         component: Market,
-      }, 
+      },
       {
         path: "/querymission",
-            component: Querymission,
+        component: Querymission,
       }
     ],
   },
@@ -55,12 +68,16 @@ const routes = [
   },
   {
     path: "/querymission",
-        component: Querymission,
+    component: Querymission,
   },
   {
     path: "/createmission",
-        component: Createmission,
+    component: Createmission,
   },
+  {
+    path: "/404",
+    component: Page404,
+  }
 ];
 
 const router = vueRouter.createRouter({

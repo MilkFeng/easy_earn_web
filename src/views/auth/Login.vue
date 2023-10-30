@@ -25,7 +25,7 @@
         没有账号？
         <!-- <router-link to="/register" class="text-blue text-decoration-none"> -->
         <!-- 暂时在这个地方链接到主页 -->
-        <router-link to="/market" class="text-decoration-none">
+        <router-link to="/register" class="text-decoration-none">
           现在注册 <v-icon icon="mdi-chevron-right"></v-icon>
         </router-link>
       </v-card-text>
@@ -71,22 +71,14 @@ function login() {
           username: username.value,
           password: password.value,
         },
-      })
-        .then(response => {
-          console.log('成功响应:', response.data);
-          auth.token(null, response.data.token, false);
-          console.log('mytoken:', auth.token());
+      }).then(response => {
+        console.log('成功响应:', response.data);
+      }).catch(error => {
+        console.error('发生错误:', error.response.data);
+        loading.value = false;
 
-          // 存储令牌
-          // setToken(response.data.Token);
-
-          // 跳转到首页或其他需要的页面
-          router.push({ path: '/' });
-        })
-        .catch(error => {
-          console.error('发生错误:', error);
-          loading.value = false;
-        });
+        alert(error.response.data);
+      });
 
       console.log("登录");
     }
