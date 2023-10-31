@@ -1,11 +1,11 @@
 <template>
   <v-container class="center-content">
     <v-card width="700px" variant="outlined">
-      <v-stepper alt-labels v-model="step" :items="items" hide-actions
+      <v-stepper alt-labels v-model="step" :items="['开始创建钱包', '生成密钥对', '完成']" hide-actions
         style="box-shadow: none; background-color: transparent;">
         <!-- 页面一 -->
         <template v-slot:item.1>
-          <v-text-area class="text-h6">开始创建钱包，流程如下：</v-text-area>
+          <p class="text-h6">开始创建钱包，流程如下：</p>
           <v-timeline side="end" class="mt-4">
             <v-timeline-item>
               <v-alert>客户端生成密钥对（公钥和私钥）</v-alert>
@@ -22,21 +22,20 @@
 
         <!-- 页面二 -->
         <template v-slot:item.2>
-          <v-text-area class="text-h6">
+          <p class="text-h6">
 
             <v-row class="mt-1 ms-1 me-1">
-              <v-text-area>生成密钥对</v-text-area>
+              <p>生成密钥对</p>
               <v-spacer></v-spacer>
-              <v-btn icon="mdi-refresh" class="center-content" variant="text" density="compact"></v-btn>
+              <v-btn icon="mdi-refresh" class="center-content" variant="text" density="compact" @click="generateKey()"></v-btn>
             </v-row>
-          </v-text-area>
+          </p>
 
           <v-container>
-
-            <card-with-mono-text title="私钥" text="3d05b1e8cf4f3237c56176a626f2cb32d7b1c47ded625dcf7840c01b0f9ed050" />
-            <card-with-mono-text title="公钥"
-              text="0431cdf19efba3eb6cbf459905dff5a7437376e0b0099e799a948fe3ceaf4335c37ddf36ec9289c4ed72e6d4e9c0dc8b8ba79fbfab93c57c385afe7dcd3d811d60" />
+            <CardWithMonoText title="私钥" :text="key.privateKey" />
+            <CardWithMonoText title="公钥" :text="key.publicKey" />
           </v-container>
+          <v-btn @click="create(); step += 1" variant="tonal" block>创建</v-btn>
         </template>
 
 
@@ -45,41 +44,79 @@
           <v-row justify="center" align="center">
             <v-col cols="12" class="text-center">
 
-              <circle-with-loading-and-result state="loading" title="正在工作" />
+              <CircleWithLoadingAndResult :state="state"/>
 
+              <CardWithMonoText v-if="state === 'success'" title="私钥" :text="key.privateKey" />
+              <CardWithMonoText v-if="state === 'success'" title="公钥" :text="key.publicKey" />
+              <CardWithMonoText v-if="state === 'success'" title="钱包地址" :text="address" />
+              <CardWithMonoText v-if="state === 'error'" title="错误" :text="error" />
 
-              <card-with-mono-text title="私钥" text="3d05b1e8cf4f3237c56176a626f2cb32d7b1c47ded625dcf7840c01b0f9ed050" />
-              <card-with-mono-text title="公钥"
-                text="0431cdf19efba3eb6cbf459905dff5a7437376e0b0099e799a948fe3ceaf4335c37ddf36ec9289c4ed72e6d4e9c0dc8b8ba79fbfab93c57c385afe7dcd3d811d60" />
-              <card-with-mono-text title="钱包地址" text="11112gNSU4Ytt3b2TpAQnggARSidPpNxrNkWqFFg52aNe5t6sjCy2c" />
-
-              <v-btn @click="routeTo('/wallet')" width="128px" class="mt-8 mb-4" variant="tonal" block>关闭</v-btn>
+            </v-col>
+          </v-row>
+          <v-row justify="center" align="center" class="mt-8 mb-4">
+            <v-col cols="6" class="text-center">
+              <v-btn @click="routeTo('/bond-wallet')" variant="tonal" block>绑定钱包</v-btn>
+            </v-col>
+            <v-col cols="6" class="text-center">
+              <v-btn @click="routeTo('/wallet')" variant="tonal" block>关闭</v-btn>
             </v-col>
           </v-row>
         </template>
 
-        <v-stepper-actions @click:prev="step -= 1" @click:next="step += 1" v-if="step !== 3" />
+        <v-stepper-actions @click:prev="step -= 1" @click:next="step += 1" v-if="step < 2" />
       </v-stepper>
     </v-card>
   </v-container>
 </template>
   
-<script>
+<script setup>
 import CardWithMonoText from '../../components/CardWithMonoText.vue';
 import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'
 
-export default {
-  components: {
-    'card-with-mono-text': CardWithMonoText,
-    'circle-with-loading-and-result': CircleWithLoadingAndResult,
-  },
-  data: () => ({
-    step: 1,
-    items: ['开始创建钱包', '生成密钥对', '完成'],
-  }),
+import { getCurrentInstance, onMounted, onBeforeMount, ref } from "vue";
+import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
-  methods: {
-    routeTo(url) { this.$router.push(url); },
-  },
+import { ec } from 'elliptic';
+
+const router = vueRouter.useRouter(); // 获取 Vue Router 实例
+var axios = null;
+
+const step = ref(1);
+const key = ref({privateKey: "", publicKey: ""});
+const address = ref("");
+const state = ref("loading");
+const error = ref("");
+
+onMounted(() => {
+  axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+  generateKey();
+});
+
+const create = () => {
+  state.value = "loading";
+  axios.post('/wallet/create', {
+    pk: key.value.publicKey,
+  }).then((res) => {
+    address.value = res.data.address;
+    state.value = "success";
+  }).catch((err) => {
+    state.value = "error";
+    error.value = err.response.data.msg;
+  });
+};
+
+const generateKey = () => {
+  const secp256k1 = new ec('secp256k1');
+  const keyPair = secp256k1.genKeyPair();
+
+  // 获取公钥和私钥，编码为十六进制字符串
+  const publicKey = keyPair.getPublic('hex');
+  const privateKey = keyPair.getPrivate('hex');
+
+  key.value = {privateKey, publicKey};
+};
+
+const routeTo = (url) => {
+  router.push(url);
 };
 </script>

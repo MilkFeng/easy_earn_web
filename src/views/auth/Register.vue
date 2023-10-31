@@ -41,9 +41,10 @@
 
 <script setup>
 import { getCurrentInstance, onMounted, ref } from "vue";
+import { useAuth } from '@websanova/vue-auth/src/v3.js';
 
 // 使用 ref 来声明响应式变量
-var auth = null;
+const auth = useAuth();
 
 const base_url = ref("");
 
@@ -62,10 +63,6 @@ const rules = {
 };
 
 const register_form = ref(null);
-
-onMounted(() => {
-  auth = getCurrentInstance()?.appContext.config.globalProperties.$auth;
-});
 
 function register() {
   register_form.value.validate().then(valid => {

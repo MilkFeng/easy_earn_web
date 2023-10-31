@@ -1,11 +1,11 @@
 <template>
   <v-container class="center-content">
     <v-card width="700px" variant="outlined">
-      <v-stepper alt-labels v-model="step" :items="items" hide-actions
+      <v-stepper alt-labels v-model="step" :items="['开始', '确认地址', '完成']" hide-actions
         style="box-shadow: none; background-color: transparent;">
         <!-- 页面一 -->
         <template v-slot:item.1>
-          <v-text-area class="text-h6">开始绑定钱包，流程如下：</v-text-area>
+          <p class="text-h6">开始绑定钱包，流程如下：</p>
           <v-timeline side="end" class="mt-4">
             <v-timeline-item>
               <v-alert>用户输入钱包地址</v-alert>
@@ -24,8 +24,10 @@
 
         <!-- 页面2 -->
         <template v-slot:item.2>
-          <v-text-area class="text-h6">输入钱包地址</v-text-area>
-          <v-text-field v-model="walletAddress" variant="outlined" class="mt-4 text-mono"></v-text-field>
+          <p class="text-h6">输入钱包地址</p>
+          <v-text-field v-model="address" variant="outlined" class="mt-4 text-mono"></v-text-field>
+
+          <v-btn @click="bond(); step += 1;" class="mt-8 mb-4" variant="tonal" block>绑定</v-btn>
         </template>
 
         <!-- 页面3 -->
@@ -33,38 +35,56 @@
           <v-row justify="center" align="center">
             <v-col cols="12" class="text-center">
 
-              <circle-with-loading-and-result state="loading" title="正在工作" />
+              <CircleWithLoadingAndResult :state="state"/>
 
-              <card-with-mono-text title="钱包地址" text="11112gNSU4Ytt3b2TpAQnggARSidPpNxrNkWqFFg52aNe5t6sjCy2c" />
+              <CardWithMonoText v-if="state === 'success'" title="钱包地址" :text="address" />
+              <CardWithMonoText v-if="state === 'error'" title="错误" :text="error" />
 
-              <v-btn @click="routeTo('/wallet')" width="128px" class="mt-8 mb-4" variant="tonal" block>关闭</v-btn>
+              <v-btn v-if="state !== 'loading'" @click="routeTo('/wallet')" class="mt-8 mb-4" variant="tonal" block>关闭</v-btn>
             </v-col>
           </v-row>
         </template>
 
-        <v-stepper-actions @click:prev="step -= 1" @click:next="step += 1" v-if="step !== 3" />
+        <v-stepper-actions @click:prev="step -= 1" @click:next="step += 1" v-if="step < 2" />
       </v-stepper>
     </v-card>
   </v-container>
 </template>
     
-<script>
+<script setup>
 
 import CardWithMonoText from '../../components/CardWithMonoText.vue';
 import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'
 
-export default {
-  components: {
-    'card-with-mono-text': CardWithMonoText,
-    'circle-with-loading-and-result': CircleWithLoadingAndResult,
-  },
-  data: () => ({
-    step: 1,
-    items: ['开始', ' 确认地址', '完成'],
-  }),
+import { getCurrentInstance, onMounted, onBeforeMount, ref } from "vue";
+import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
-  methods: {
-    routeTo(url) { this.$router.push(url); },
-  },
+const router = vueRouter.useRouter(); // 获取 Vue Router 实例
+var axios = null;
+
+const step = ref(1);
+const state = ref("loading");
+const error = ref("");
+const address = ref("");
+
+onMounted(() => {
+  axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+});
+
+const routeTo = (url) => {
+  router.push(url);
 };
+
+const bond = () => {
+  state.value = "loading";
+  axios.post('/user/add-wallet', {
+    address: address.value,
+  }).then(res => {
+    console.log(res);
+    state.value = "success";
+  }).catch(err => {
+    error.value = err.response.data.msg;
+    state.value = "error";
+  });
+}
 </script>

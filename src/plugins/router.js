@@ -5,8 +5,9 @@ import Register from "../views/auth/Register.vue";
 import Main from "../views/main/Main.vue";
 import Wallet from "../views/main/Wallet.vue";
 import Market from "../views/main/Market.vue";
-import Querymission from "../views/main/Querymission.vue";
-import Createmission from "../views/main/Createmission.vue";
+
+import Querymission from "../views/mission/Querymission.vue";
+import Createmission from "../views/mission/Createmission.vue";
 
 import CreateWallet from "../views/wallet/CreateWallet.vue";
 import BondWallet from "../views/wallet/BondWallet.vue";

@@ -11,12 +11,15 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
+    "@fabcotech/rchain-toolkit": "^3.0.2",
     "@mdi/font": "^7.2.96",
     "@mdi/svg": "^7.2.96",
     "@mdi/util": "^0.3.2",
     "@websanova/vue-auth": "^4.2.1",
     "axios": "^1.5.1",
+    "elliptic": "^6.5.4",
     "pinia": "^2.1.6",
+    "secp256k1": "^5.0.0",
     "vue": "^3.3.4",
     "vue-axios": "^3.5.2",
     "vue-clipboard2": "^0.3.3",

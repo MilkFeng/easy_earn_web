@@ -35,11 +35,12 @@
 
 <script setup>
 import { getCurrentInstance, onMounted, ref } from "vue";
+import { useAuth } from '@websanova/vue-auth/src/v3.js';
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
-
 var axios = null;
-var auth = null;
+const auth = useAuth();
+const router = vueRouter.useRouter(); // 获取 Vue Router 实例
 
 const username = ref("");
 const password = ref("");
@@ -54,11 +55,9 @@ const rules = {
 
 const login_form = ref(null);
 
-const router = vueRouter.useRouter(); // 获取 Vue Router 实例
 
 onMounted(() => {
   axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
-  auth = getCurrentInstance()?.appContext.config.globalProperties.$auth;
 });
 
 function login() {
@@ -73,6 +72,10 @@ function login() {
         },
       }).then(response => {
         console.log('成功响应:', response.data);
+
+        // 存入 user 里面
+        auth.user(response.data);
+
       }).catch(error => {
         console.error('发生错误:', error.response.data);
         loading.value = false;

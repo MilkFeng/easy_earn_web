@@ -43,10 +43,12 @@
   
 <script setup>
 
-import { getCurrentInstance, onMounted, ref } from "vue";
+import { getCurrentInstance, onMounted, onBeforeMount, ref } from "vue";
+import { useAuth } from '@websanova/vue-auth/src/v3.js';
+import { useStore } from 'vuex';
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
-var auth = null;
+const auth = useAuth();
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
 
 const jobs = [
@@ -106,12 +108,18 @@ const jobs = [
 const accountBalance = ref(1000); // 账户余额
 const isBellHovered = ref(false); // 铃铛图标悬停状态
 const user = ref({
-  username: "jsoet",
+  username: "null",
 });
 
 
-onMounted(() => {
-  auth = getCurrentInstance()?.appContext.config.globalProperties.$auth;
+onBeforeMount(() => {
+  auth.fetch().then(response => {
+    console.log('成功响应:', response.data);
+    auth.user(response.data);
+    user.value = auth.user();
+  }).catch(error => {
+    console.log('发生错误:', error.response.data);
+  });
 });
 
 
