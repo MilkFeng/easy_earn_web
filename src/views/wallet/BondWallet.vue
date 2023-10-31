@@ -59,6 +59,8 @@ import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndRes
 import { getCurrentInstance, onMounted, onBeforeMount, ref } from "vue";
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
+import { bond_wallet } from '../../function/http.js';
+
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
 var axios = null;
 
@@ -77,13 +79,10 @@ const routeTo = (url) => {
 
 const bond = () => {
   state.value = "loading";
-  axios.post('/user/add-wallet', {
-    address: address.value,
-  }).then(res => {
-    console.log(res);
+  bond_wallet(axios, address.value, data => {
     state.value = "success";
-  }).catch(err => {
-    error.value = err.response.data.msg;
+  }, msg => {
+    error.value = msg;
     state.value = "error";
   });
 }

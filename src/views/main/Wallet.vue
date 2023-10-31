@@ -3,29 +3,22 @@
   <v-row>
 
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/create-wallet')">
-        创建钱包
-      </v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/create-wallet')">创建钱包</v-btn>
     </v-col>
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/bond-wallet')">
-        绑定钱包
-      </v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/bond-wallet')">绑定钱包</v-btn>
     </v-col>
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/trade')">
-        交易
-      </v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/trade')">交易</v-btn>
     </v-col>
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="refresh()">
-        刷新钱包
-      </v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="refresh()"
+        :loading="state === 'loading'">刷新钱包</v-btn>
     </v-col>
   </v-row>
 
   <div v-if="state !== 'success'" style="display: block; text-align: center;" class="mt-10">
-    <CircleWithLoadingAndResult :show="false" :state="state"/>
+    <CircleWithLoadingAndResult :show="false" :state="state" />
     <CardWithMonoText v-if="state === 'error'" title="错误" :text="error" />
   </div>
 
@@ -34,11 +27,12 @@
       <v-card class="my-0" variant="outlined">
         <v-card-title>
           <v-row justify="center" align="center">
-            <v-card-title class="text-h4 my-4">{{ wallet.balance }} ET</v-card-title>
+            <v-card-title class="text-h4 my-4">{{ wallet.show ? wallet.balance : "**" }} ET</v-card-title>
             <v-spacer></v-spacer>
-            <v-btn :icon="wallet.show ? 'mdi-eye' : 'mdi-eye-off'" class="center-content me-2"
-              variant="text" density="compact" @click="wallet.show = wallet.show ^ 1"></v-btn>
-            <v-btn icon="mdi-close" class="center-content me-2" variant="text" density="compact"></v-btn>
+            <v-btn :icon="wallet.show ? 'mdi-eye' : 'mdi-eye-off'" class="center-content me-2" variant="text"
+              density="compact" @click="wallet.show = wallet.show ^ 1"></v-btn>
+            <v-btn icon="mdi-close" class="center-content me-2" variant="text" density="compact"
+              @click="deleteWallet(wallet.id)"></v-btn>
           </v-row>
         </v-card-title>
         <v-card-text>
@@ -59,10 +53,12 @@ import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndRes
 import CardWithMonoText from '../../components/CardWithMonoText.vue';
 
 
-
 import { getCurrentInstance, onMounted, ref } from "vue";
 import { useAuth } from '@websanova/vue-auth/src/v3.js';
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
+
+import { get_wallets, delete_wallet } from '../../function/http.js';
+
 
 var axios = null;
 const auth = useAuth();
@@ -79,53 +75,23 @@ onMounted(() => {
 
 function refresh() {
   state.value = "loading";
-  get_wallets().then(_ => {
+  get_wallets(axios, data => {
+    wallets.value = data.wallets;
     state.value = "success";
-  }).catch(err => {
+  }, msg => {
     state.value = "error";
-    error.value = err.response.data.msg;
+    error.value = msg;
   });
 }
 
-async function get_wallets() {
-  await get_addresses();
-  await get_balances();
-}
-
-async function get_addresses() {
-  return await axios.get('/user/get-wallets').then(res => {
-    let now = 0;
-    wallets.value = res.data.addresses.map(address => {
-      now = now + 1;
-      return {
-        id: now,
-        address: address,
-        show: false,
-        balance: "?"
-      };
+function deleteWallet(id) {
+  if(confirm("确定要删除吗？")) {
+    delete_wallet(axios, wallets.value[id].address, data => {
+      refresh();
+    }, msg => {
+      console.error(msg);
     });
-  });
-}
-
-async function get_balances() {
-  let addresses = wallets.value.map(wallet => wallet.address);
-  await axios.post('/wallet/balance', {
-    addresses: addresses,
-  }).then(res => {
-    for(let i = 0; i < addresses.length; i++) {
-      wallets.value[i].balance = res.data.balance[i];
-    }
-  });
-}
-
-function toggleShowAddress(walletId) {
-  // 切换是否显示全部地址的状态
-  showFullAddress.value[walletId] = !showFullAddress.value[walletId];
-}
-
-function deleteWallet(walletId) {
-  // 在此处添加删除钱包的逻辑
-  // 可以根据 walletId 执行删除操作
+  }
 }
 
 function routeTo(url) {

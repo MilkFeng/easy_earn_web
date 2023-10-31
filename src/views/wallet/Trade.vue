@@ -24,10 +24,10 @@
 
         <template v-slot:item.2>
           <p class="text-h6">转出钱包地址</p>
-          <v-combobox :items="addresses" v-model="from" variant="outlined" class="mt-4 text-mono"
-            autocomplete="off"></v-combobox>
+          <v-select :items="addresses" v-model="from" variant="outlined" class="mt-4 text-mono"
+            autocomplete="off"></v-select>
           <p class="text-h6">转入钱包地址</p>
-          <v-text-field v-model="to" variant="outlined" class="mt-4 text-mono"></v-text-field>
+          <v-combobox :items="addresses" v-model="to" variant="outlined" class="mt-4 text-mono"></v-combobox>
           <p class="text-h6">金额</p>
           <v-text-field v-model="amount" prefix="ET" variant="outlined" class="mt-4 text-mono"></v-text-field>
           <v-btn @click="nonceStep(); step += 1;" class="mt-8 mb-4" variant="tonal" block>下一步</v-btn>
@@ -55,8 +55,16 @@
               <div v-if="nonceState !== 'success'">
                 <CircleWithLoadingAndResult :state="nonceState" />
                 <CardWithMonoText v-if="nonceState === 'error'" title="错误" :text="nonceError" />
-                <v-btn @click="step -= 1" v-if="nonceState === 'error'" class="mt-4 mb-4" variant="tonal"
-                  block>上一步</v-btn>
+
+                <v-row justify="center" align="center" class="mt-8 mb-4" v-if="nonceState === 'error'">
+                  <v-col cols="6" class="text-center">
+                    <v-btn @click="step -= 1" variant="tonal" block>上一步</v-btn>
+                  </v-col>
+                  <v-col cols="6" class="text-center">
+                    <v-btn @click="routeTo('/')" variant="tonal" block>取消</v-btn>
+                  </v-col>
+                </v-row>
+
               </div>
 
             </v-col>
@@ -106,6 +114,7 @@ import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndRes
 import { getCurrentInstance, onMounted, onBeforeMount, ref } from "vue";
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
+import { get_addresses, get_nonce, transfer } from '../../function/http.js';
 import { toByteArray, getBlake2Hash, signSecp256k1, uint8ArrayToHexString } from '../../function/utils.js';
 
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
@@ -129,58 +138,32 @@ const transferError = ref("");
 
 onMounted(() => {
   axios = getCurrentInstance()?.appContext.config.globalProperties.axios;
-  get_addresses().catch(err => {
-    console.error(err);
-  });
+  get_addresses(axios, data => {
+    addresses.value = data.addresses;
+  }, msg => {});
 });
 
 function nonceStep() {
   nonceState.value = "loading";
-  get_nonce().then(_ => {
+  get_nonce(axios, from.value, data => {
     nonceState.value = "success";
-  }).catch(err => {
+    nonce.value = data.nonce + 1;
+  }, msg => {
     nonceState.value = "error";
-    nonceError.value = err.response.data.msg;
-
-    console.error(err);
+    nonceError.value = msg;
   });
 }
 
 function transferStep() {
   transferState.value = "loading";
-  transfer().then(res => {
-    transferState.value = "success";
-  }).catch(err => {
-    transferState.value = "error";
-    transferError.value = err.response.data.msg;
-
-    console.error(err);
-  });
-}
-
-async function get_addresses() {
-  return await axios.get('/user/get-wallets').then(res => {
-    addresses.value = res.data.addresses;
-  });
-}
-
-async function get_nonce() {
-  return await axios.post('/wallet/nonce', {
-    address: from.value,
-  }).then(res => {
-    nonce.value = res.data.nonce + 1;
-  });
-}
-
-async function transfer() {
-  return await axios.post('/wallet/transfer', {
-    nonce: parseInt(nonce.value),
-    from: from.value,
-    to: to.value,
-    amount: parseInt(amount.value),
-    pk: publicKey.value,
-    sig: sig.value,
-  });
+  transfer(axios, parseInt(nonce.value), from.value, to.value, parseInt(amount.value), publicKey.value, sig.value,
+    data => {
+      transferState.value = "success";
+    }, msg => {
+      transferState.value = "error";
+      transferError.value = msg;
+    }
+  );
 }
 
 function sign() {

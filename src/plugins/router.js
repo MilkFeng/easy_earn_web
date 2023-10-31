@@ -5,8 +5,8 @@ import Register from "../views/auth/Register.vue";
 import Main from "../views/main/Main.vue";
 import Wallet from "../views/main/Wallet.vue";
 import Market from "../views/main/Market.vue";
+import Mission from "../views/main/Mission.vue";
 
-import Querymission from "../views/mission/Querymission.vue";
 import Createmission from "../views/mission/Createmission.vue";
 
 import CreateWallet from "../views/wallet/CreateWallet.vue";
@@ -49,8 +49,8 @@ const routes = [
         component: Market,
       },
       {
-        path: "/querymission",
-        component: Querymission,
+        path: "/mission",
+        component: Mission,
       }
     ],
   },
@@ -66,10 +66,6 @@ const routes = [
   {
     path: "/trade",
     component: Trade,
-  },
-  {
-    path: "/querymission",
-    component: Querymission,
   },
   {
     path: "/createmission",

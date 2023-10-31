@@ -76,6 +76,8 @@ import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndRes
 import { getCurrentInstance, onMounted, onBeforeMount, ref } from "vue";
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
+import { create_wallet } from '../../function/http.js';
+
 import { ec } from 'elliptic';
 
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
@@ -94,14 +96,12 @@ onMounted(() => {
 
 const create = () => {
   state.value = "loading";
-  axios.post('/wallet/create', {
-    pk: key.value.publicKey,
-  }).then((res) => {
-    address.value = res.data.address;
+  create_wallet(axios, key.value.publicKey, data => {
+    address.value = data.address;
     state.value = "success";
-  }).catch((err) => {
+  }, msg => {
     state.value = "error";
-    error.value = err.response.data.msg;
+    error.value = msg;
   });
 };
 
