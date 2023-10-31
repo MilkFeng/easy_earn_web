@@ -55,7 +55,7 @@
           </v-row>
           <v-row justify="center" align="center" class="mt-8 mb-4">
             <v-col cols="6" class="text-center">
-              <v-btn @click="routeTo('/bond-wallet')" variant="tonal" block>绑定钱包</v-btn>
+              <v-btn @click="routeTo({ path: '/bond-wallet', query: { address: address } })" variant="tonal" block>绑定钱包</v-btn>
             </v-col>
             <v-col cols="6" class="text-center">
               <v-btn @click="routeTo('/wallet')" variant="tonal" block>关闭</v-btn>
@@ -116,7 +116,7 @@ const generateKey = () => {
   key.value = {privateKey, publicKey};
 };
 
-const routeTo = (url) => {
-  router.push(url);
+const routeTo = (to) => {
+  router.push(to);
 };
 </script>

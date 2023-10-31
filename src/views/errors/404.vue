@@ -12,9 +12,20 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-btn variant="tonal" to="/">返回主页</v-btn>
+                        <v-btn variant="tonal" @click="back();">返回上一个页面</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-container>
         </v-main>
     </v-app>
 </template>
+
+<script setup>
+import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
+
+const router = vueRouter.useRouter(); // 获取 Vue Router 实例
+
+function back() {
+    router.back();
+}
+</script>
