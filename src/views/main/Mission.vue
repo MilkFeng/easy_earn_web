@@ -7,7 +7,7 @@
       <v-container>
         <v-row justify="center" align="center">
           <v-col cols="9">
-            <v-select v-model="selectedWallet" :items="[123]" variant="outlined" label="请选择要查询的钱包" block
+            <v-select v-model="selectedWallet" :items="wallets" variant="outlined" label="请选择要查询的钱包" block
               :hide-details="true"></v-select>
           </v-col>
           <v-col cols="3">
@@ -42,10 +42,11 @@ import { getCurrentInstance, onMounted, ref } from "vue";
 import { useAuth } from '@websanova/vue-auth/src/v3.js';
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
+import { get_addresses } from '../../function/http.js';
+
 var axios = null;
 const auth = useAuth();
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
-
 
 const jobs = [
   {
@@ -101,24 +102,18 @@ const jobs = [
 ];
 
 const selectedWallet = ref(null);
-const wallet = ref([]);
+const wallets = ref([]);
 
 onMounted(() => {
   axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
+  refresh_address();
 });
 
-async function get_addresses() {
-  return await axios.get('/user/get-wallets').then(res => {
-    let now = -1;
-    wallets.value = res.data.addresses.map(address => {
-      now = now + 1;
-      return {
-        id: now,
-        address: address,
-        show: false,
-        balance: "?"
-      };
-    });
+function refresh_address() {
+  get_addresses(axios, data => {
+    wallets.value = data.addresses;
+  }, msg => {
+    console.error(msg);
   });
 }
 
