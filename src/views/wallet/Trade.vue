@@ -95,7 +95,7 @@
                 <v-card-item>公钥：{{ publicKey }}</v-card-item>
               </v-card>
 
-              <v-btn @click="routeTo('/wallet')" class="mt-8 mb-4" variant="tonal" block>关闭</v-btn>
+              <v-btn v-if="transferState !== 'loading'" @click="routeTo('/wallet')" class="mt-8 mb-4" variant="tonal" block>关闭</v-btn>
             </v-col>
           </v-row>
         </template>

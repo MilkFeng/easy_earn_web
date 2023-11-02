@@ -53,7 +53,7 @@
 
             </v-col>
           </v-row>
-          <v-row justify="center" align="center" class="mt-8 mb-4">
+          <v-row v-if="state !== 'loading'" justify="center" align="center" class="mt-8 mb-4">
             <v-col cols="6" class="text-center">
               <v-btn @click="routeTo({ path: '/bond-wallet', query: { address: address } })" variant="tonal" block>绑定钱包</v-btn>
             </v-col>
