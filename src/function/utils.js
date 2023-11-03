@@ -31,3 +31,24 @@ export function hexStringToUint8Array(hexString) {
 export const toByteArray = rchainToolkit.utils.toByteArray;
 
 export const getBlake2Hash = rchainToolkit.utils.getBlake2Hash;
+
+
+export const decodeTaskContent = (content) => {
+    try {
+        return JSON.parse(content);
+    } catch (err) {
+        return {
+            text: "24324234"
+        }
+    }
+};
+
+export const decodeRecordContent = (content) => {
+    try {
+        return JSON.parse(content);
+    } catch (err) {
+        return {
+            text: "24324234"
+        }
+    }
+};

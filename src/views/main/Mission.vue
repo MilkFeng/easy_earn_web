@@ -16,14 +16,13 @@
         </v-row>
       </v-container>
       <v-container class="pa-4">
-        <v-row justify="center">
-          <v-col cols="12" md="3" sm="6" v-for="job in jobs" :key="job.id">
+        <v-row v-if="state === 'success'">
+          <v-col cols="12" md="4" sm="6" v-for="task in tasks" :key="(task.address, task.nonce)">
             <v-card variant="outlined" class="mb-2">
-              <v-card-title>{{ job.title }}</v-card-title>
+              <v-card-title>{{ task.address }}, {{ task.nonce }}</v-card-title>
               <v-card-text>
                 <!-- 兼职任务信息内容 -->
-                <p>{{ job.description }}</p>
-                <p>薪资: {{ job.salary }}</p>
+                <p>{{ task.content.text }}</p>
               </v-card-text>
               <v-card-actions>
                 <v-btn variant="tonal">申请</v-btn>
@@ -31,6 +30,10 @@
             </v-card>
           </v-col>
         </v-row>
+        <div v-if="state !== 'success'" style="display: block; text-align: center;" class="mt-10">
+          <CircleWithLoadingAndResult :show="false" :state="state" />
+          <CardWithMonoText v-if="state === 'error'" title="错误" :text="error" />
+        </div>
       </v-container>
     </v-main>
   </v-app>
@@ -38,75 +41,36 @@
     
 <script setup>
 
-import { getCurrentInstance, onMounted, ref } from "vue";
+import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'
+import CardWithMonoText from '../../components/CardWithMonoText.vue';
+
+import { getCurrentInstance, onMounted, ref, watch } from "vue";
 import { useAuth } from '@websanova/vue-auth/src/v3.js';
 import * as vueRouter from 'vue-router'; // 导入 Vue Router 的相关模块
 
-import { get_addresses } from '../../function/http.js';
+import { get_addresses, get_all_tasks_of } from '../../function/http.js';
+import { decodeTaskContent } from '../../function/utils.js';
 
 var axios = null;
 const auth = useAuth();
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
 
-const jobs = [
-  {
-    id: 1,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-  {
-    id: 2,
-    title: "兼职2",
-    description: "这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n这是兼职2的描述\n",
-    salary: "80元/小时",
-  },
-  {
-    id: 3,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-  {
-    id: 4,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-  {
-    id: 4,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-  {
-    id: 4,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-  {
-    id: 4,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-  {
-    id: 4,
-    title: "兼职1",
-    description: "这是兼职1的描述",
-    salary: "100元/小时",
-  },
-
-  // 可以添加更多兼职数据
-];
+const jobs = [];
 
 const selectedWallet = ref(null);
 const wallets = ref([]);
+const tasks = ref([]);
+
+const state = ref("success");
+const error = ref("");
 
 onMounted(() => {
   axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
   refresh_address();
+});
+
+watch(selectedWallet, (newValue, oldValue) => {
+  refresh_tasks();
 });
 
 function refresh_address() {
@@ -115,6 +79,23 @@ function refresh_address() {
   }, msg => {
     console.error(msg);
   });
+}
+
+function refresh_tasks() {
+  if(selectedWallet.value === null || selectedWallet.value === undefined) return;
+  state.value = 'loading';
+  get_all_tasks_of(axios, selectedWallet.value, data => {
+    state.value = 'success';
+    console.log(data);
+    tasks.value = data.tasks.map(task => ({
+      address: task.address,
+      nonce: task.nonce,
+      content: decodeTaskContent(task.content),
+    }));
+  }, msg => {
+    console.error(msg);
+    state.value = 'error';
+  })
 }
 
 function routeTo(url) {
