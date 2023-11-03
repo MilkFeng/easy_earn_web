@@ -58,18 +58,30 @@ const routes = [
   {
     path: "/create-wallet",
     component: CreateWallet,
+    meta: {
+      auth: true
+    },
   },
   {
     path: "/bond-wallet",
     component: BondWallet,
+    meta: {
+      auth: true
+    },
   },
   {
     path: "/trade",
     component: Trade,
+    meta: {
+      auth: true
+    },
   },
   {
     path: "/createmission",
     component: Createmission,
+    meta: {
+      auth: true
+    },
   },
   {
     path: "/404",

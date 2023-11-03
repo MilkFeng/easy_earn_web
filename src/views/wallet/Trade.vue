@@ -61,7 +61,7 @@
                     <v-btn @click="step -= 1" variant="tonal" block>上一步</v-btn>
                   </v-col>
                   <v-col cols="6" class="text-center">
-                    <v-btn @click="routeTo('/')" variant="tonal" block>取消</v-btn>
+                    <v-btn @click="routeTo('/wallet')" variant="tonal" block>取消</v-btn>
                   </v-col>
                 </v-row>
 
