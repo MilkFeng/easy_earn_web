@@ -72,3 +72,11 @@ export const get_task = (axios, address, nonce, onFinish, onErr) =>
     get_with_params('/task/get-task', {
         address, nonce
     }, axios, onFinish, onErr);
+
+export const upload_task = (axios, address, nonce, content, hash, sig, pk, onFinish, onErr) =>
+    post('/task/upload', {
+        address, nonce, content, hash, sig, pk,
+    }, axios, onFinish, onErr);
+
+export const get_task_nonce = (axios, address, onFinish, onErr) =>
+    get('/task/task-nonce/' + address, axios, onFinish, onErr);

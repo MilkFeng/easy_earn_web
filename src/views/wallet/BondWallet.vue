@@ -72,8 +72,6 @@ const address = ref("");
 onMounted(() => {
   axios = getCurrentInstance()?.appContext.config.globalProperties.$axios;
 
-  console.log(router);
-
   if(router?.currentRoute?.value?.query?.address !== undefined) {
     address.value = router.currentRoute.value.query.address;
   }

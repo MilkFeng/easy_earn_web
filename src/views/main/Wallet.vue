@@ -3,13 +3,13 @@
   <v-row>
 
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/create-wallet')">创建钱包</v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/wallet/create')">创建钱包</v-btn>
     </v-col>
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/bond-wallet')">绑定钱包</v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/wallet/bond')">绑定钱包</v-btn>
     </v-col>
     <v-col cols="3">
-      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/trade')">交易</v-btn>
+      <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="routeTo('/wallet/trade')">交易</v-btn>
     </v-col>
     <v-col cols="3">
       <v-btn class="mb-4 text-center" variant="tonal" block size="large" @click="refresh()"

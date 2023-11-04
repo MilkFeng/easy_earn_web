@@ -55,7 +55,7 @@
           </v-row>
           <v-row v-if="state !== 'loading'" justify="center" align="center" class="mt-8 mb-4">
             <v-col cols="6" class="text-center">
-              <v-btn @click="routeTo({ path: '/bond-wallet', query: { address: address } })" variant="tonal" block>绑定钱包</v-btn>
+              <v-btn @click="routeTo({ path: '/wallet/bond', query: { address: address } })" variant="tonal" block>绑定钱包</v-btn>
             </v-col>
             <v-col cols="6" class="text-center">
               <v-btn @click="routeTo('/wallet')" variant="tonal" block>关闭</v-btn>
@@ -68,7 +68,7 @@
     </v-card>
   </v-container>
 </template>
-  
+
 <script setup>
 import CardWithMonoText from '../../components/CardWithMonoText.vue';
 import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'

@@ -57,11 +57,10 @@ const user = ref({
 
 onBeforeMount(() => {
   auth.fetch().then(response => {
-    console.log('成功响应:', response.data);
     auth.user(response.data);
     user.value = auth.user();
   }).catch(error => {
-    console.log('发生错误:', error.response.data);
+    console.error(error.response.data);
   });
 });
 

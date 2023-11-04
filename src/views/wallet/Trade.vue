@@ -52,20 +52,15 @@
                 <v-btn @click="sign(); step += 1" class="mt-4 mb-4" variant="tonal" block>签名</v-btn>
               </div>
 
-              <div v-if="nonceState !== 'success'">
-                <CircleWithLoadingAndResult :state="nonceState" />
-                <CardWithMonoText v-if="nonceState === 'error'" title="错误" :text="nonceError" />
-
-                <v-row justify="center" align="center" class="mt-8 mb-4" v-if="nonceState === 'error'">
-                  <v-col cols="6" class="text-center">
-                    <v-btn @click="step -= 1" variant="tonal" block>上一步</v-btn>
-                  </v-col>
-                  <v-col cols="6" class="text-center">
-                    <v-btn @click="routeTo('/wallet')" variant="tonal" block>取消</v-btn>
-                  </v-col>
-                </v-row>
-
-              </div>
+              <NonceErrorCard :state="nonceState" :error="nonceError"></NonceErrorCard>
+              <v-row justify="center" align="center" class="mt-8 mb-4" v-if="nonceState === 'error'">
+                <v-col cols="6" class="text-center">
+                  <v-btn @click="step -= 1;" variant="tonal" block>上一步</v-btn>
+                </v-col>
+                <v-col cols="6" class="text-center">
+                  <v-btn @click="routeTo('/wallet');" variant="tonal" block>取消</v-btn>
+                </v-col>
+              </v-row>
 
             </v-col>
           </v-row>
@@ -95,7 +90,8 @@
                 <v-card-item>公钥：{{ publicKey }}</v-card-item>
               </v-card>
 
-              <v-btn v-if="transferState !== 'loading'" @click="routeTo('/wallet')" class="mt-8 mb-4" variant="tonal" block>关闭</v-btn>
+              <v-btn v-if="transferState !== 'loading'" @click="routeTo('/wallet')" class="mt-8 mb-4" variant="tonal"
+                block>关闭</v-btn>
             </v-col>
           </v-row>
         </template>
@@ -108,6 +104,7 @@
       
 <script setup>
 
+import NonceErrorCard from "../../components/NonceErrorCard.vue";
 import CardWithMonoText from '../../components/CardWithMonoText.vue';
 import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'
 
@@ -140,7 +137,9 @@ onMounted(() => {
   axios = getCurrentInstance()?.appContext.config.globalProperties.axios;
   get_addresses(axios, data => {
     addresses.value = data.addresses;
-  }, msg => {});
+  }, msg => {
+    console.error(msg);
+  });
 });
 
 function nonceStep() {

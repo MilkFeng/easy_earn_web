@@ -11,8 +11,8 @@
                         
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn variant="tonal" to="/">返回主页</v-btn>
-                        <v-btn variant="tonal" @click="back();">返回上一个页面</v-btn>
+                        <v-btn variant="text" to="/">返回主页</v-btn>
+                        <v-btn variant="text" @click="back();">返回上一个页面</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-container>

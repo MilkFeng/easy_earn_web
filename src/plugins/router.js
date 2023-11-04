@@ -54,30 +54,29 @@ const routes = [
       }
     ],
   },
-
   {
-    path: "/create-wallet",
+    path: "/wallet/create",
     component: CreateWallet,
     meta: {
       auth: true
     },
   },
   {
-    path: "/bond-wallet",
+    path: "/wallet/bond",
     component: BondWallet,
     meta: {
       auth: true
     },
   },
   {
-    path: "/trade",
+    path: "/wallet/trade",
     component: Trade,
     meta: {
       auth: true
     },
   },
   {
-    path: "/createmission",
+    path: "/mission/create",
     component: Createmission,
     meta: {
       auth: true
@@ -86,7 +85,7 @@ const routes = [
   {
     path: "/404",
     component: Page404,
-  }
+  },
 ];
 
 const router = vueRouter.createRouter({

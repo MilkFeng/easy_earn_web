@@ -11,23 +11,14 @@
               :hide-details="true"></v-select>
           </v-col>
           <v-col cols="3">
-            <v-btn color="primary" @click="routeTo('/createmission')" variant="tonal" block>创建任务</v-btn>
+            <v-btn color="primary" @click="routeTo('/mission/create')" variant="tonal" size="large" block>创建任务</v-btn>
           </v-col>
         </v-row>
       </v-container>
       <v-container class="pa-4">
         <v-row v-if="state === 'success'">
-          <v-col cols="12" md="4" sm="6" v-for="task in tasks" :key="(task.address, task.nonce)">
-            <v-card variant="outlined" class="mb-2">
-              <v-card-title>{{ task.address }}, {{ task.nonce }}</v-card-title>
-              <v-card-text>
-                <!-- 兼职任务信息内容 -->
-                <p>{{ task.content.text }}</p>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn variant="tonal">申请</v-btn>
-              </v-card-actions>
-            </v-card>
+          <v-col cols="12" md="6" sm="6" v-for="task in tasks" :key="(task.address, task.nonce)">
+            <TaskCard :address="task.address" :nonce="task.nonce" :content="task.content"/>
           </v-col>
         </v-row>
         <div v-if="state !== 'success'" style="display: block; text-align: center;" class="mt-10">
@@ -43,6 +34,7 @@
 
 import CircleWithLoadingAndResult from '../../components/CircleWithLoadingAndResult.vue'
 import CardWithMonoText from '../../components/CardWithMonoText.vue';
+import TaskCard from '../../components/TaskCard.vue';
 
 import { getCurrentInstance, onMounted, ref, watch } from "vue";
 import { useAuth } from '@websanova/vue-auth/src/v3.js';
@@ -54,8 +46,6 @@ import { decodeTaskContent } from '../../function/utils.js';
 var axios = null;
 const auth = useAuth();
 const router = vueRouter.useRouter(); // 获取 Vue Router 实例
-
-const jobs = [];
 
 const selectedWallet = ref(null);
 const wallets = ref([]);
@@ -86,12 +76,7 @@ function refresh_tasks() {
   state.value = 'loading';
   get_all_tasks_of(axios, selectedWallet.value, data => {
     state.value = 'success';
-    console.log(data);
-    tasks.value = data.tasks.map(task => ({
-      address: task.address,
-      nonce: task.nonce,
-      content: decodeTaskContent(task.content),
-    }));
+    tasks.value = data.tasks;
   }, msg => {
     console.error(msg);
     state.value = 'error';
