@@ -6,8 +6,10 @@ import Main from "../views/main/Main.vue";
 import Wallet from "../views/main/Wallet.vue";
 import Market from "../views/main/Market.vue";
 import Mission from "../views/main/Mission.vue";
+import Square from "../views/main/Square.vue";
 
 import Createmission from "../views/mission/Createmission.vue";
+import Applymission from "../views/mission/Applymission.vue";
 
 import CreateWallet from "../views/wallet/CreateWallet.vue";
 import BondWallet from "../views/wallet/BondWallet.vue";
@@ -51,6 +53,10 @@ const routes = [
       {
         path: "/mission",
         component: Mission,
+      },
+      {
+        path: "/square",
+        component: Square,
       }
     ],
   },
@@ -78,6 +84,13 @@ const routes = [
   {
     path: "/mission/create",
     component: Createmission,
+    meta: {
+      auth: true
+    },
+  },
+  {
+    path: "/mission/apply",
+    component: Applymission,
     meta: {
       auth: true
     },

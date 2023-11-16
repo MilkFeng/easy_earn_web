@@ -7,7 +7,7 @@
       <v-btn class="rounded-0" @click="routeTo('/market')">主页</v-btn>
       <v-btn class="rounded-0" @click="routeTo('/wallet')">我的钱包</v-btn>
       <v-btn class="rounded-0" @click="routeTo('/mission')">我的任务</v-btn>
-
+      <v-btn class="rounded-0" @click="routeTo('/square')">任务广场</v-btn>
       <v-spacer></v-spacer>
 
       <v-menu min-width="200px" rounded :close-on-content-click="false">
@@ -76,3 +76,4 @@ function logout() {
   });
 }
 </script>
+

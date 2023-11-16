@@ -119,8 +119,6 @@ function sign() {
     const signHash = getBlake2Hash(bytes);
     const sigBytes = signSecp256k1(signHash, privateKey.value);
     sig.value = uint8ArrayToHexString(sigBytes);
-    //如果成功，打印一串成功信息
-    console.log("签名成功");
 }
 
 function nextStep() {

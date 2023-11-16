@@ -62,6 +62,9 @@ async function request_wallets(axios) {
 export const get_wallets = (axios, onFinish, onErr) =>
     request(request_wallets(axios), onFinish, onErr);
 
+//used in square
+export const get_tasks = (axios, onFinish, onErr) =>
+    get('/task/get-tasks', axios, onFinish, onErr);
 
 export const get_all_tasks_of = (axios, address, onFinish, onErr) =>
     get_with_params('/task/get-all-tasks', {
@@ -78,5 +81,19 @@ export const upload_task = (axios, address, nonce, content, hash, sig, pk, onFin
         address, nonce, content, hash, sig, pk,
     }, axios, onFinish, onErr);
 
+export const apply_task_upload = (axios, address, nonce, content, hash, sig, publicKey, onFinish, onErr) =>
+    post('/apply_task/upload', {
+        address,
+        nonce,
+        content,
+        hash,
+        sig,
+        publicKey,
+    }, axios, onFinish, onErr);
+
 export const get_task_nonce = (axios, address, onFinish, onErr) =>
     get('/task/task-nonce/' + address, axios, onFinish, onErr);
+
+
+
+
