@@ -4,10 +4,10 @@
     <v-app-bar app class="ps-8 pe-8">
 
       <!-- 按钮组，包括测试字符按钮 -->
-      <v-btn class="rounded-0" @click="routeTo('/market')">主页</v-btn>
+      <v-btn class="rounded-0" @click="routeTo('/square')">任务广场</v-btn>
       <v-btn class="rounded-0" @click="routeTo('/wallet')">我的钱包</v-btn>
       <v-btn class="rounded-0" @click="routeTo('/mission')">我的任务</v-btn>
-      <v-btn class="rounded-0" @click="routeTo('/square')">任务广场</v-btn>
+      
       <v-spacer></v-spacer>
 
       <v-menu min-width="200px" rounded :close-on-content-click="false">

@@ -4,7 +4,6 @@ import Register from "../views/auth/Register.vue";
 
 import Main from "../views/main/Main.vue";
 import Wallet from "../views/main/Wallet.vue";
-import Market from "../views/main/Market.vue";
 import Mission from "../views/main/Mission.vue";
 import Square from "../views/main/Square.vue";
 
@@ -37,7 +36,7 @@ const routes = [
   {
     path: "/",
     component: Main,
-    redirect: "/market",
+    redirect: "/square",
     meta: {
       auth: true
     },
@@ -46,10 +45,7 @@ const routes = [
         path: "/wallet",
         component: Wallet,
       },
-      {
-        path: "/market",
-        component: Market,
-      },
+
       {
         path: "/mission",
         component: Mission,
